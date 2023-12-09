@@ -1,18 +1,43 @@
 <script lang="ts">
-	import type { App } from "obsidian";
 	import SettingItem from "./components/SettingItem.svelte";
 	import { settings } from "./settingsstore";
-
-	export let app: App;
 </script>
 
 <SettingItem>
-	<span slot="name">Setting #1 in Vault {app.vault.getName()}</span>
-	<span slot="description"> It's a secret </span>
+	<span slot="name">Highlights Location</span>
+	<span slot="description">
+		Under which heading can we find the highlights we want openAI to use?
+		(Don't include the #)
+	</span>
 	<input
 		slot="control"
 		type="text"
-		bind:value={$settings.mySetting}
+		bind:value={$settings.highlightsHeading}
+		spellcheck="false"
+		placeholder=""
+	/>
+</SettingItem>
+<SettingItem>
+	<span slot="name">Output Location</span>
+	<span slot="description">
+		Under which heading can we append the distilled response from openAI?
+		(Don't include the #)
+	</span>
+	<input
+		slot="control"
+		type="text"
+		bind:value={$settings.outputHeading}
+		spellcheck="false"
+		placeholder=""
+	/>
+</SettingItem>
+<SettingItem>
+	<span slot="name">OpenAi API Key</span>
+	<span slot="description"> Please put in your API Key </span>
+	<input
+		slot="control"
+		type="text"
+		bind:value={$settings.openAiAPIKey}
 		spellcheck="false"
 		placeholder=""
 	/>

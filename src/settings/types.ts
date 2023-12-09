@@ -1,7 +1,11 @@
 export interface ObsidianDistillerSettings {
-	mySetting: string;
+	highlightsHeading: string;
+	outputHeading: string;
+	openAiAPIKey: string;
 }
 
-export const DEFAULT_SETTINGS: ObsidianDistillerSettings = {
-	mySetting: "default",
+export const DEFAULT_SETTINGS: Partial<ObsidianDistillerSettings> = {
+	highlightsHeading: "",
+	outputHeading: "",
+	openAiAPIKey: "",
 };
