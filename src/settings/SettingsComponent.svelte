@@ -42,3 +42,16 @@
 		placeholder=""
 	/>
 </SettingItem>
+<SettingItem>
+	<span slot="name">AI Prompt</span>
+	<span slot="description"
+		>Please add the prompt you would like to send to API to distill the
+		note. Use Note_Title as a template for the note title</span
+	>
+	<textarea
+		slot="control"
+		rows="6"
+		placeholder="Add your prompt with &#123; Note_Title &#125;"
+		bind:value={$settings.openAiPrompt}
+	></textarea>
+</SettingItem>
