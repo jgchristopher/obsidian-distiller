@@ -59,7 +59,6 @@ export class NoteDistiller {
 		editor: Editor,
 		settings: ObsidianDistillerSettings,
 	) {
-		debugger;
 		const highlightsLines = Utility.getEndAndBeginningOfHeading(
 			app,
 			file,
