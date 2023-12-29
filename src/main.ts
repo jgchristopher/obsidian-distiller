@@ -15,13 +15,6 @@ export default class ObsidianDistillerPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: "obsidian-distilled-plugin-test",
-			name: "This command does nothing",
-			callback: () => {},
-		});
-
 		// Add a menu item to the file-menu
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file) => {
@@ -43,11 +36,16 @@ export default class ObsidianDistillerPlugin extends Plugin {
 		// This adds a command to the editor
 		this.addCommand({
 			id: "obsidian-distilled-plugin-distill-note",
-			name: "Distill the current note if it is a Mardown Note",
+			name: "Distill the current note if it is a Mardown Note in Edit Mode",
 			// checkCallback: async (checking:boolean) => {
-			editorCallback: async (_editor, ctx) => {
+			editorCallback: async (editor, ctx) => {
 				Utility.assertNotNull(ctx.file);
-				NoteDistiller.distill(this.app, ctx.file, this.settings);
+				NoteDistiller.distillEditor(
+					this.app,
+					ctx.file,
+					editor,
+					this.settings,
+				);
 			},
 		});
 

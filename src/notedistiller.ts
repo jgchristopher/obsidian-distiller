@@ -1,4 +1,4 @@
-import { App, Modal, TFile } from "obsidian";
+import { App, Editor, MarkdownView, Modal, TFile } from "obsidian";
 import { Utility } from "./utils";
 import type { ObsidianDistillerSettings } from "./settings/types";
 import { OpenAIRequest } from "./openai/OpenAiRequest";
@@ -51,6 +51,61 @@ export class NoteDistiller {
 		);
 
 		await Utility.write(app, file, distilledInfo, outputLines.firstLine);
+	}
+
+	public static async distillEditor(
+		app: App,
+		file: TFile,
+		editor: Editor,
+		settings: ObsidianDistillerSettings,
+	) {
+		debugger;
+		const highlightsLines = Utility.getEndAndBeginningOfHeading(
+			app,
+			file,
+			settings.highlightsHeading,
+		);
+
+		const fileData = await app.vault.read(file);
+		const fileLines = fileData.split("\n");
+		const highlightData = fileLines.slice(
+			highlightsLines.firstLine,
+			highlightsLines.lastLine,
+		);
+
+		const promptTemplate = settings.openAiPrompt;
+		let prompt = promptTemplate.replaceAll(
+			"{Note_Title}",
+			file.name.split(".")[0],
+		);
+
+		const line = editor.getCursor().line;
+		console.log(line);
+
+		prompt = `${prompt} \n ${highlightData.join("\n")}`;
+
+		const waitingTexts = [
+			"openAi Api can take while...",
+			"No, seriously, it can take a long time...",
+			"We just need to be patient. Almost there...",
+		];
+
+		const waitingInterval = setInterval(() => {
+			editor.setLine(
+				line,
+				waitingTexts[Math.floor(Math.random() * waitingTexts.length)],
+			);
+		}, 1000);
+
+		const openAiResponse = await OpenAIRequest(settings.openAiAPIKey)(
+			prompt,
+		);
+
+		clearInterval(waitingInterval);
+
+		const distilledInfo = openAiResponse.choices[0].message.content;
+
+		editor.setLine(line, distilledInfo);
 	}
 }
 
