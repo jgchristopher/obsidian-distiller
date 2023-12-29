@@ -1,6 +1,7 @@
 import { App, Modal, TFile } from "obsidian";
 import { Utility } from "./utils";
 import type { ObsidianDistillerSettings } from "./settings/types";
+import { OpenAIRequest } from "./openai/OpenAiRequest";
 
 export class NoteDistiller {
 	public static async distill(
@@ -20,17 +21,36 @@ export class NoteDistiller {
 			highlightsLines.firstLine,
 			highlightsLines.lastLine,
 		);
-		new TempModal(app, highlightData.join("\n")).open();
+
+		const promptTemplate = settings.openAiPrompt;
+		let prompt = promptTemplate.replaceAll(
+			"{Note_Title}",
+			file.name.split(".")[0],
+		);
+
+		prompt = `${prompt} \n ${highlightData.join("\n")}`;
+
+		const modal = new TempModal(
+			app,
+			"Distilling Note... Please Be Patient",
+		);
+		modal.open();
+
+		const openAiResponse = await OpenAIRequest(settings.openAiAPIKey)(
+			prompt,
+		);
+
+		modal.close();
+
+		const distilledInfo = openAiResponse.choices[0].message.content;
 
 		const outputLines = Utility.getEndAndBeginningOfHeading(
 			app,
 			file,
 			settings.outputHeading,
 		);
-		console.log(
-			`Highlights start at ${highlightsLines.firstLine} and end at ${highlightsLines.lastLine}`,
-		);
-		console.log(`Output start at ${outputLines.firstLine}`);
+
+		await Utility.write(app, file, distilledInfo, outputLines.firstLine);
 	}
 }
 

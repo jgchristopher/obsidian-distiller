@@ -1,4 +1,4 @@
-import { Notice, type App, type TFile, type HeadingCache } from "obsidian";
+import { Notice, type App, TFile, type HeadingCache } from "obsidian";
 
 export class Utility {
 	public static assertNotNull<T>(
@@ -16,6 +16,24 @@ export class Utility {
 			cleanHeading = heading.substring(2);
 		}
 		return cleanHeading;
+	}
+
+	public static async write(
+		app: App,
+		file: TFile,
+		clippedData: string,
+		startLine: number,
+	): Promise<void> {
+		const fileData = await app.vault.read(file);
+		const fileLines = fileData.split("\n");
+
+		const preSectionContent = fileLines.slice(0, startLine);
+		const restOfContent = fileLines.slice(startLine);
+		const text = [...preSectionContent, clippedData, ...restOfContent].join(
+			"\n",
+		);
+
+		return await app.vault.modify(file, text);
 	}
 
 	public static getEndAndBeginningOfHeading(
