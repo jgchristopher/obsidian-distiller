@@ -87,4 +87,40 @@ export class Utility {
 			throw Error("Heading not found");
 		}
 	}
+
+	public static containsHeadings(
+		app: App,
+		file: TFile,
+		heading1: string,
+		heading2: string,
+	): boolean {
+		let headingsFound = false;
+		// Get the CachedMetadata for this file
+		const cache = app.metadataCache.getFileCache(file);
+		Utility.assertNotNull(cache);
+		heading1 = Utility.cleanHeading(heading1);
+		heading2 = Utility.cleanHeading(heading2);
+		try {
+			const cachedHeadings = cache.headings;
+			Utility.assertNotNull(cachedHeadings);
+			// We need to see if the configured heading exists in the document
+			const foundHeadingIndex1 = cachedHeadings.findIndex(
+				(cachedHeading) => {
+					return cachedHeading.heading === heading1;
+				},
+			);
+
+			const foundHeadingIndex2 = cachedHeadings.findIndex(
+				(cachedHeading) => {
+					return cachedHeading.heading === heading2;
+				},
+			);
+
+			headingsFound =
+				foundHeadingIndex1 !== -1 && foundHeadingIndex2 !== -1;
+		} catch (_e) {
+			return headingsFound;
+		}
+		return headingsFound;
+	}
 }

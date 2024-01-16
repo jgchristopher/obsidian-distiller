@@ -41,7 +41,7 @@ export default class ObsidianDistillerPlugin extends Plugin {
 			editorCallback: async (editor, ctx) => {
 				Utility.assertNotNull(ctx.file);
 				NoteDistiller.distillEditor(
-					this.app,
+					this,
 					ctx.file,
 					editor,
 					this.settings,
