@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-distiller",
 	"name": "Obsidian Distiller",
-	"version": "0.0.1",
+	"version": "0.0.4",
 	"minAppVersion": "0.15.0",
 	"description": "Show NebraskaJS how to build an Obsidian Plugin",
 	"author": "",

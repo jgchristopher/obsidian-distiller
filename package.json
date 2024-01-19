@@ -1,12 +1,13 @@
 {
 	"name": "obsidian-distiller",
-	"version": "0.0.1",
+	"version": "0.0.4",
 	"description": "This is a plugin used to show how to build plugins",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && npm run copy",
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"copy": "cp main.js styles.css manifest.json /Users/johnchristopher/gitprojects/obsidian-plugins/dev_plugin_links/obsidian-distiller/"
 	},
 	"keywords": [],
 	"author": "",
